@@ -1,0 +1,23 @@
+{
+    "name": "statflo/php-di",
+    "description": "Dependency Injection for statflo php projects",
+    "type": "library",
+    "require": {
+        "symfony/proxy-manager-bridge": "3.2.4",
+        "zendframework/zend-code": "2.6.3",
+        "ocramius/proxy-manager": "1.0.2",
+        "symfony/finder": "dev-master",
+        "symfony/config": "dev-master",
+        "symfony/dependency-injection": "dev-master"
+    },
+    "license": "COPYRIGHT",
+    "authors": [
+        {
+            "name": "Kinn Coelho Juliao",
+            "email": "kinn@statflo.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {"Statflo\\": "src/Statflo"}
+    }
+}
