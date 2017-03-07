@@ -108,13 +108,13 @@ class Bootstrap
 
         $this->define(
             'statflo.session',
-            \Statflo\DTO\Collection::class,
+            \Statflo\DI\DTO\Collection::class,
             $configuration['session']
         );
 
         $this->define(
             'statflo.auth',
-            \Statflo\DTO\Auth::class,
+            \Statflo\DI\DTO\Auth::class,
             [$configuration['session']['authaccount']]
         );
     }
