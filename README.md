@@ -14,6 +14,7 @@
         /* ... */
         {
             "type": "vcs",
+            "no-api": true,
             "url":  "git@github.com:statflo/php-di.git"
         }
     ]
