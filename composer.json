@@ -18,6 +18,6 @@
         }
     ],
     "autoload": {
-        "psr-4": {"Statflo\\": "src/Statflo"}
+        "psr-4": {"Statflo\\DI\\": "src/Statflo/DI"}
     }
 }
