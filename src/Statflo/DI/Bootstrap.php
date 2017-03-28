@@ -112,10 +112,16 @@ class Bootstrap
             $configuration['session']
         );
 
+        $auth = [];
+
+        if (isset($configuration['session']['authaccount'])) {
+            $auth = [$configuration['session']['authaccount']];
+        }
+
         $this->define(
             'statflo.auth',
             \Statflo\DI\DTO\Auth::class,
-            [$configuration['session']['authaccount']]
+            $auth
         );
     }
 }
