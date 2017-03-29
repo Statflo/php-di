@@ -30,7 +30,6 @@ class Bootstrap
 
         $bootstrap->defineParameters($parameters);
 
-        $bootstrap->defineSession($configuration);
         $loader = new XmlFileLoader($bootstrap->getContainer(), new FileLocator($configuration['config_path']));
         $loader->load('config.xml');
 
