@@ -109,7 +109,7 @@ class Bootstrap
         $this->define(
             'statflo.session',
             \Statflo\DI\DTO\Collection::class,
-            $configuration['session']
+            [$configuration['session']]
         );
 
         $auth = [];
