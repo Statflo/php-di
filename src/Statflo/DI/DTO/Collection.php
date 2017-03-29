@@ -2,6 +2,6 @@
 
 namespace Statflo\DI\DTO;
 
-class Collection extends ArrayObject
+class Collection extends \ArrayObject
 {
 }
