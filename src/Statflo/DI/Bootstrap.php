@@ -66,7 +66,7 @@ class Bootstrap
         }
     }
 
-    private function define($serviceName, $className, array $configuration = [])
+    public function define($serviceName, $className, array $configuration = [])
     {
         $this
             ->container
@@ -98,30 +98,5 @@ class Bootstrap
         $definition->setLazy(true);
 
         return $definition;
-    }
-
-    private function defineSession(array $configuration = [])
-    {
-        if (!isset($configuration['session'])) {
-            return;
-        }
-
-        $this->define(
-            'statflo.session',
-            \Statflo\DI\DTO\Collection::class,
-            [$configuration['session']]
-        );
-
-        $auth = [];
-
-        if (isset($configuration['session']['authaccount'])) {
-            $auth = [$configuration['session']['authaccount']];
-        }
-
-        $this->define(
-            'statflo.auth',
-            \Statflo\DI\DTO\Auth::class,
-            $auth
-        );
     }
 }
