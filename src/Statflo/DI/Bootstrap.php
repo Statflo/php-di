@@ -7,6 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
+use Statflo\DI\XMLFileLoader as ByPassXMLFileLoader;
 
 class Bootstrap
 {
@@ -30,7 +31,13 @@ class Bootstrap
 
         $bootstrap->defineParameters($parameters);
 
-        $loader = new XmlFileLoader($bootstrap->getContainer(), new FileLocator($configuration['config_path']));
+        $fileLoader = XmlFileLoader::class;
+
+        if (!empty($configuration['by_pass_xsd']) && $configuration['by_pass_xsd']) {
+            $fileLoader = ByPassXMLFileLoader::class;
+        }
+
+        $loader = new $fileLoader($bootstrap->getContainer(), new FileLocator($configuration['config_path']));
         $loader->load('config.xml');
 
         self::$bootstrap = $bootstrap;
