@@ -7,6 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 
 class Bootstrap
 {
@@ -14,9 +15,9 @@ class Bootstrap
 
     static $bootstrap;
 
-    private function __construct()
+    private function __construct($container)
     {
-        $this->container = new ContainerBuilder();
+        $this->container = $container;
     }
 
     public static function run(array $configuration = [])
@@ -25,12 +26,26 @@ class Bootstrap
             return self::$bootstrap;
         }
 
-        $bootstrap  = new self();
         $parameters = isset($configuration['parameters']) ? $configuration['parameters'] : [];
+        $cachePath  = getenv('CONTAINER_CACHE');
+
+        if ($cachePath && file_exists($cachePath)) {
+            require_once $cachePath;
+
+            $container = new \ProjectServiceContainer();
+            $bootstrap = new self($container);
+
+            self::$bootstrap = $bootstrap;
+
+            return self::$bootstrap;
+        }
+
+        $container = new ContainerBuilder();
+        $bootstrap = new self($container);
 
         $bootstrap->defineParameters($parameters);
 
-        $loader = new XmlFileLoader($bootstrap->getContainer(), new FileLocator($configuration['config_path']));
+        $loader = new XmlFileLoader($container, new FileLocator($configuration['config_path']));
         $loader->load('config.xml');
 
         self::$bootstrap = $bootstrap;
@@ -55,6 +70,25 @@ class Bootstrap
         ;
     }
 
+    public function compile()
+    {
+        if ($this->container->isFrozen()) {
+            return;
+        }
+
+        $cachePath = getenv('CONTAINER_CACHE');
+
+        $this
+            ->container
+            ->compile()
+        ;
+
+        if ($cachePath) {
+            $dumper = new PhpDumper($this->container);
+            file_put_contents($cachePath, $dumper->dump());
+        }
+    }
+
     private function defineParameters(array $parameters = [])
     {
         foreach ($parameters as $parameter => $value) {
@@ -67,6 +101,10 @@ class Bootstrap
 
     public function define($serviceName, $className, array $configuration = [])
     {
+        if ($this->container->isFrozen()) {
+            return;
+        }
+
         $this
             ->container
             ->setDefinition($serviceName, $this->getDefinition($className, $configuration));
